@@ -3,19 +3,22 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import CombineRouter from "./routes/index.js";
+import cookieParser from "cookie-parser";
+import CombineRouter from "./routes/index.js";
+
 dotenv.config();
 
 const app = express();
+
+// Middlewares
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
+app.use("/api/auth", CombineRouter);
 
-const PORT = 5000 || 9000;
-const MONGO_URL =
-  "mongodb+srv://longvuong1920:x17hdt@x17-hdt-be.ej7xbyg.mongodb.net/travel_blog?retryWrites=true&w=majority";
-
-app.use("/api/v1", CombineRouter);
+const PORT = process.env.PORT || 9000;
 mongoose
-  .connect(MONGO_URL, {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

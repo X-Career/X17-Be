@@ -37,7 +37,6 @@ const decodeToken = (token) => {
   const verifyToken = jwt.verify(token, "SECRET_CODE");
   return verifyToken;
 };
-
 export {
   resClientData,
   hashingPassword,

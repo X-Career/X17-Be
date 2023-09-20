@@ -1,5 +1,8 @@
-import { Router } from "express";
-const AuthRouter = Router();
-AuthRouter.post("/signIn");
-AuthRouter.post("/signUp");
-export default AuthRouter;
+import express from "express";
+
+const router = express.Router();
+
+router.post("/register");
+router.post("/login");
+
+export default router;
