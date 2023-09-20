@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import CombineRouter from "./routes/index.js";
 import cookieParser from "cookie-parser";
-import CombineRouter from "./routes/index.js";
 
 dotenv.config();
 
@@ -14,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-app.use("/api/auth", CombineRouter);
+app.use("/api/v1", CombineRouter);
 
 const PORT = process.env.PORT || 9000;
 mongoose

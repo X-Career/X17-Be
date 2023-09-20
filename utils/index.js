@@ -26,17 +26,19 @@ const comparePassword = (password, salt, hashedPassword) => {
   return hashedPassword === hashingPasswordReq;
 };
 
-const generateJwt = (data) => {
+const generateJwt = (data, expiresIn) => {
   const token = jwt.sign(data, "SECRET_CODE", {
-    expiresIn: "1d",
+    expiresIn: expiresIn || "1d", 
   });
   return token;
 };
+
 
 const decodeToken = (token) => {
   const verifyToken = jwt.verify(token, "SECRET_CODE");
   return verifyToken;
 };
+
 export {
   resClientData,
   hashingPassword,

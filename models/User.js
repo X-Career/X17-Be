@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import CombineCollection from "../database/index.js";
 const UserSchema = new mongoose.Schema(
   {
     firstName: {
@@ -30,22 +30,26 @@ const UserSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: String,
-      required: true,
+      default: "",
     },
+    salt: { type: String, required: true },
     age: {
       type: String,
-      required: true,
+      default: "",
     },
     gender: {
       type: String,
       required: true,
     },
-    bio: String,
+    bio: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const User = mongoose.model("User", UserSchema);
-export default User;
+const UserModel = mongoose.model(CombineCollection.USERINFO, UserSchema);
+export default UserModel;
