@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 
 const resClientData = (res, statusCode, data, message) => {
   res.status(statusCode).send({
@@ -28,11 +27,10 @@ const comparePassword = (password, salt, hashedPassword) => {
 
 const generateJwt = (data, expiresIn) => {
   const token = jwt.sign(data, "SECRET_CODE", {
-    expiresIn: expiresIn || "1d", 
+    expiresIn: expiresIn || "1d",
   });
   return token;
 };
-
 
 const decodeToken = (token) => {
   const verifyToken = jwt.verify(token, "SECRET_CODE");

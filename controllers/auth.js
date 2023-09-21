@@ -6,6 +6,7 @@ import {
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
+
 export const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, username, email, password, gender } = req.body;
@@ -16,7 +17,7 @@ export const registerUser = async (req, res) => {
     });
 
     if (existingUser) {
-      return resClientData(res, 400, null, "Username or email already exists");
+      return resClientData(res, 400, null, "Username or email already exists!");
     }
 
     // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
@@ -42,6 +43,7 @@ export const registerUser = async (req, res) => {
     resClientData(res, 500, null, "Internal Server Error");
   }
 };
+
 //sign in
 export const signinController = async (req, res) => {
   try {
@@ -54,7 +56,7 @@ export const signinController = async (req, res) => {
 
     // Kiểm tra nếu người dùng không tồn tại
     if (!user) {
-      return resClientData(res, 401, null, "Incorrect username or password");
+      return resClientData(res, 401, null, "User not found!");
     }
 
     // So sánh mật khẩu được cung cấp với mật khẩu đã lưu
@@ -62,7 +64,7 @@ export const signinController = async (req, res) => {
 
     // Kiểm tra tính hợp lệ của mật khẩu
     if (!isPasswordValid) {
-      return resClientData(res, 401, null, "Incorrect username or password");
+      return resClientData(res, 401, null, "Invalid credentials!");
     }
 
     // Tạo JWT access token với hạn 2 giờ
@@ -96,6 +98,6 @@ export const signinController = async (req, res) => {
   } catch (error) {
     // Xử lý lỗi nếu có
     console.error("Lỗi đăng nhập:", error);
-    return resClientData(res, 500, null, "An error occurred during login");
+    return resClientData(res, 500, null, "Something went wrong.");
   }
 };
