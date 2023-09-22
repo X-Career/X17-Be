@@ -1,24 +1,53 @@
+import * as yup from "yup";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
 const resClientData = (res, status, data, message) => {
   res.status(status).send({
     data: data ? data : null,
     message: data
       ? message
         ? message
-        : "thanh cong"
+        : "success"
       : message
       ? message
-      : "that bai",
+      : "failed",
     success: data ? true : false,
   });
 };
-const KEY = "123abcs";
-const genToken = (data) => {
-  const token = jwt.sign(data, KEY, { expiresIn: 2500 });
+
+const hashingPassword = (password) => {
+  const saltRounds = 10;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+  return {
+    hashedPassword,
+    salt,
+  };
+};
+
+const comparePassword = (password, salt, hashedPassword) => {
+  const hashingPasswordReq = bcrypt.hashSync(password, salt);
+  return hashedPassword === hashingPasswordReq;
+};
+
+const generateJwt = (data, expiresIn) => {
+  const token = jwt.sign(data, "SECRET_CODE", {
+    expiresIn: expiresIn || "1d",
+  });
   return token;
 };
-const verifyToken = (data) => {
-  const decoded = jwt.verify(data, KEY);
-  return decoded;
+
+const decodeToken = (token) => {
+  const verifyToken = jwt.verify(token, "SECRET_CODE");
+  return verifyToken;
 };
-export { resClientData, genToken, verifyToken };
+
+export {
+  resClientData,
+  hashingPassword,
+  comparePassword,
+  generateJwt,
+  decodeToken,
+};

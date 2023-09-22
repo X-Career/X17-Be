@@ -1,7 +1,16 @@
-import { Router } from "express";
-import userController from "../controllers/auth.js";
-import middleware from "../middlewares/index.js";
-const AuthRouter = Router();
+import express from "express";
+import {
+  registerUser,
+  signinController,
+  refreshTokenHandle,
+  updateUserInfo,
+} from "../controllers/auth.js";
+import { authenticate } from "../middlewares/verifyToken.js";
+const router = express.Router();
 
-AuthRouter.put("/updateInfo", middleware.verifyToken, userController.update);
-export default AuthRouter;
+router.post("/register", registerUser);
+router.post("/login", signinController);
+router.post("/refresh-token", refreshTokenHandle);
+router.put("/updateInfo", authenticate, updateUserInfo);
+
+export default router;
