@@ -136,7 +136,12 @@ export const updateUserInfo = async (req, res) => {
     crrAccount.firstName = firstName || crrAccount.firstName;
     crrAccount.lastName = lastName || crrAccount.lastName;
     crrAccount.username = username || crrAccount.username;
-    crrAccount.password = password || crrAccount.password;
+    // hash password trước khi lưu lại
+    if (password) {
+      const { hashedPassword, salt } = hashingPassword(password);
+      crrAccount.password = hashedPassword;
+      crrAccount.salt = salt;
+    }
     crrAccount.gender = gender || crrAccount.gender;
     await crrAccount.save();
     resClientData(res, 200, crrAccount);
