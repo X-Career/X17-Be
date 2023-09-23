@@ -7,7 +7,10 @@ import {
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
-import e from "express";
+import dotenv from "dotenv";
+dotenv.config();
+const { JWT_SECRET } = process.env;
+
 export const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, username, email, password, gender } = req.body;
@@ -83,7 +86,7 @@ export const signinController = async (req, res) => {
 export const refreshTokenHandle = async (req, res) => {
   try {
     const refreshToken = req.header("Authorization").replace("Bearer ", "");
-    const decodedRefreshToken = decodeToken(refreshToken, "SECRET_CODE"); // Replace "SECRET_CODE" with your actual secret key
+    const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
 
     const existingRefreshToken = await refreshTokenModel.findOne({
       token: refreshToken,
