@@ -131,18 +131,29 @@ export const updateUserInfo = async (req, res) => {
   try {
     const user = req.user;
     const { firstName, lastName, username, password, gender } = req.body;
-    const crrAccount = await UserModel.findById(user._id);
+
+    const updateFields = {
+      firstName,
+      lastName,
+      username,
+      password,
+      gender,
+    };
+
+    const crrAccount = await UserModel.findByIdAndUpdate(
+      user._id,
+      updateFields,
+      { new: true }
+    );
     if (!crrAccount) throw new Error("User not exist");
-    crrAccount.firstName = firstName || crrAccount.firstName;
-    crrAccount.lastName = lastName || crrAccount.lastName;
-    crrAccount.username = username || crrAccount.username;
-    // hash password trước khi lưu lại
+
+    // hash password
     if (password) {
       const { hashedPassword, salt } = hashingPassword(password);
       crrAccount.password = hashedPassword;
       crrAccount.salt = salt;
     }
-    crrAccount.gender = gender || crrAccount.gender;
+
     await crrAccount.save();
     resClientData(res, 200, crrAccount);
   } catch (error) {
