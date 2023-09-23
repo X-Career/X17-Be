@@ -4,10 +4,10 @@ import {
   signinController,
   refreshTokenHandle,
 } from "../controllers/auth.js";
-const router = express.Router();
+const AuthRouter = express.Router();
 
-router.post("/register", registerUser);
-router.post("/login", signinController);
-router.post("/refresh-token", refreshTokenHandle);
+AuthRouter.post("/register", registerUser);
+AuthRouter.post("/login", signinController);
+AuthRouter.post("/refresh-token", refreshTokenHandle);
 
-export default router;
+export default AuthRouter;

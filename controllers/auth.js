@@ -68,7 +68,7 @@ export const signinController = async (req, res) => {
     }
 
     // Tạo JWT access token với hạn 2 giờ
-    const accessToken = generateJwt({ userId: user._id }, "2h");
+    const accessToken = generateJwt({ userId: user._id }, "10s");
 
     // Tạo JWT refresh token với hạn 30 ngày
     const refreshToken = generateJwt({ userId: user._id }, "30d");
