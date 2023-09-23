@@ -3,9 +3,11 @@ import {
   hashingPassword,
   generateJwt,
   comparePassword,
+  decodeToken,
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
+import e from "express";
 
 export const registerUser = async (req, res) => {
   try {
@@ -98,6 +100,30 @@ export const signinController = async (req, res) => {
   } catch (error) {
     // Xử lý lỗi nếu có
     console.error("Lỗi đăng nhập:", error);
-    return resClientData(res, 500, null, "Something went wrong.");
+    return resClientData(res, 500, null, "An error occurred during login");
+  }
+};
+//refresh-token
+export const refreshTokenHandle = async (req, res) => {
+  try {
+    const refreshToken = req.body.refreshToken;
+    const decodedRefreshToken = decodeToken(refreshToken, "SECRET_CODE");
+
+    const existingRefreshToken = await refreshTokenModel.findOne({
+      token: refreshToken,
+      userId: decodedRefreshToken.userId,
+    });
+    if (!existingRefreshToken) {
+      return res.status(401).json({ message: "Refresh Token không hợp lệ." });
+    }
+
+    // Tạo mới AT với thời gian sống mới (ví dụ: 2 giờ)
+    const newAccessToken = generateJwt(
+      { userId: decodedRefreshToken.userId },
+      "2h"
+    );
+    resClientData(res, 200, { newAccessToken }, "Refresh thành công");
+  } catch (error) {
+    resClientData(res, 400, null, error.message);
   }
 };
