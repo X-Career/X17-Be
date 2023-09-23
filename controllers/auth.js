@@ -1,3 +1,4 @@
+import express from "express";
 import {
   resClientData,
   hashingPassword,
@@ -7,7 +8,6 @@ import {
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
-import e from "express";
 
 export const registerUser = async (req, res) => {
   try {
