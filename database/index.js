@@ -1,6 +1,6 @@
 const CombineCollection = {
-  USERINFO: "Users",
-  REFRESHTOKEN: "RefreshToken",
+  USERINFO: "users",
+  REFRESHTOKEN: "refreshtoken",
 };
 
 export default CombineCollection;
