@@ -1,13 +1,14 @@
 import express from "express";
+import { validateDataRegister, validateSignIn } from "../middlewares/index.js";
 import {
   registerUser,
   signinController,
   refreshTokenHandle,
 } from "../controllers/auth.js";
-const router = express.Router();
+const AuthRouter = express.Router();
 
-router.post("/register", registerUser);
-router.post("/login", signinController);
-router.post("/refresh-token", refreshTokenHandle);
+AuthRouter.post("/register", validateDataRegister, registerUser);
+AuthRouter.post("/login", validateSignIn, signinController);
+AuthRouter.post("/refresh-token", refreshTokenHandle);
 
-export default router;
+export default AuthRouter;

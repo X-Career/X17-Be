@@ -8,12 +8,14 @@ import {
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
+import dotenv from "dotenv";
+dotenv.config();
+const { JWT_SECRET } = process.env;
 
 export const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, username, email, password, gender } = req.body;
 
-    // Kiểm tra xem username hoặc email đã tồn tại trong cơ sở dữ liệu chưa
     const existingUser = await UserModel.findOne({
       $or: [{ username }, { email }],
     });
@@ -22,10 +24,8 @@ export const registerUser = async (req, res) => {
       return resClientData(res, 400, null, "Username or email already exists!");
     }
 
-    // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
     const { hashedPassword, salt } = hashingPassword(password);
 
-    // Tạo một đối tượng người dùng mới sử dụng UserModel
     const newUser = new UserModel({
       firstName,
       lastName,
@@ -35,10 +35,7 @@ export const registerUser = async (req, res) => {
       salt,
       gender,
     });
-
-    // Lưu thông tin người dùng mới vào cơ sở dữ liệu
     await newUser.save();
-    // Trả về kết quả thành công và token
     resClientData(res, 201, newUser, "User registered successfully");
   } catch (error) {
     console.error(error);
@@ -49,42 +46,27 @@ export const registerUser = async (req, res) => {
 //sign in
 export const signinController = async (req, res) => {
   try {
-    const { identifier, password } = req.body; // Use "identifier" to accept both email and username
-
-    // Tìm người dùng theo email hoặc username (identifier)
+    const { identifier, password } = req.body;
     const user = await UserModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
 
-    // Kiểm tra nếu người dùng không tồn tại
     if (!user) {
       return resClientData(res, 401, null, "User not found!");
     }
 
-    // So sánh mật khẩu được cung cấp với mật khẩu đã lưu
     const isPasswordValid = comparePassword(password, user.salt, user.password);
-
-    // Kiểm tra tính hợp lệ của mật khẩu
     if (!isPasswordValid) {
       return resClientData(res, 401, null, "Invalid credentials!");
     }
-
-    // Tạo JWT access token với hạn 2 giờ
     const accessToken = generateJwt({ userId: user._id }, "2h");
-
-    // Tạo JWT refresh token với hạn 30 ngày
     const refreshToken = generateJwt({ userId: user._id }, "30d");
-
-    // Save the refresh token in the database
     const refreshData = {
       userId: user._id,
       token: refreshToken,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     };
-
     await refreshTokenModel.create(refreshData);
-
-    // Trả về access token, refresh token và thông tin người dùng cụ thể
     return resClientData(
       res,
       200,
@@ -98,7 +80,6 @@ export const signinController = async (req, res) => {
       "Login successful"
     );
   } catch (error) {
-    // Xử lý lỗi nếu có
     console.error("Lỗi đăng nhập:", error);
     return resClientData(res, 500, null, "An error occurred during login");
   }
@@ -106,8 +87,8 @@ export const signinController = async (req, res) => {
 //refresh-token
 export const refreshTokenHandle = async (req, res) => {
   try {
-    const refreshToken = req.body.refreshToken;
-    const decodedRefreshToken = decodeToken(refreshToken, "SECRET_CODE");
+    const refreshToken = req.header("Authorization").replace("Bearer ", "");
+    const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
 
     const existingRefreshToken = await refreshTokenModel.findOne({
       token: refreshToken,
@@ -117,12 +98,27 @@ export const refreshTokenHandle = async (req, res) => {
       return res.status(401).json({ message: "Refresh Token không hợp lệ." });
     }
 
-    // Tạo mới AT với thời gian sống mới (ví dụ: 2 giờ)
+    // Generate a new access token
     const newAccessToken = generateJwt(
       { userId: decodedRefreshToken.userId },
       "2h"
     );
-    resClientData(res, 200, { newAccessToken }, "Refresh thành công");
+    const newRefreshToken = generateJwt(
+      { userId: decodedRefreshToken.userId },
+      "30d"
+    );
+    existingRefreshToken.token = newRefreshToken;
+    existingRefreshToken.expiresAt = new Date(
+      Date.now() + 30 * 24 * 60 * 60 * 1000
+    );
+    await existingRefreshToken.save();
+
+    resClientData(
+      res,
+      200,
+      { token: newAccessToken, RT: newRefreshToken },
+      "Refresh thành công"
+    );
   } catch (error) {
     resClientData(res, 400, null, error.message);
   }
