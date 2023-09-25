@@ -1,5 +1,6 @@
 import express from "express";
-import { validateDataRegister, validateSignIn } from "../middlewares/index.js";
+import validate from "../middlewares/validate.js";
+import { schemaRegister, schemaSignIn } from "../validators/index.js";
 import {
   registerUser,
   signinController,
@@ -7,8 +8,8 @@ import {
 } from "../controllers/auth.js";
 const AuthRouter = express.Router();
 
-AuthRouter.post("/register", validateDataRegister, registerUser);
-AuthRouter.post("/login", validateSignIn, signinController);
+AuthRouter.post("/register", validate(schemaRegister), registerUser);
+AuthRouter.post("/login", validate(schemaSignIn), signinController);
 AuthRouter.post("/refresh-token", refreshTokenHandle);
 
 export default AuthRouter;
