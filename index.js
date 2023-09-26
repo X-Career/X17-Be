@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import CombineRouter from "./routes/index.js";
 import cookieParser from "cookie-parser";
-
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
@@ -17,10 +17,16 @@ app.use(cookieParser());
 app.use("/api/v1", CombineRouter);
 
 const { PORT } = process.env || 9000;
-const { MONGO_URL } = process.env;
+const { MONGO_URL, CLOUD_NAME, API_KEY, API_SECRET } = process.env;
+
+cloudinary.config({
+  cloud_name: CLOUD_NAME,
+  api_key: API_KEY,
+  api_secret: API_SECRET,
+});
 
 mongoose
-  .connect(process.env.MONGO_URL, {
+  .connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

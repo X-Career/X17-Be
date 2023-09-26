@@ -1,10 +1,19 @@
 import express from "express";
 import authenticate from "../middlewares/verifyToken.js";
 import { getUserData, updateUserInfo } from "../controllers/index.js";
-import { validateChangeData } from "../middlewares/checkDataChange.js";
+import { schemaUpdateUserInfo } from "../validators/index.js";
+import validate from "../middlewares/validate.js";
+import { UserInfoUpdateAvt } from "../controllers/index.js";
+
 const UserRouter = express.Router();
 
 UserRouter.get("/userInfo", authenticate, getUserData);
-UserRouter.put("/updateInfo", authenticate, validateChangeData, updateUserInfo);
+UserRouter.put(
+  "/updateInfo",
+  authenticate,
+  validate(schemaUpdateUserInfo),
+  updateUserInfo
+);
+UserRouter.put("/updateAvatar", authenticate, UserInfoUpdateAvt);
 
 export default UserRouter;
