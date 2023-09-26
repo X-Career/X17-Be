@@ -62,12 +62,19 @@ export const signinController = asyncHandleController(async (req, res) => {
     }
     const accessToken = generateJwt({ userId: user._id }, "2h");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
-    const refreshData = {
-      userId: user._id,
-      token: refreshToken,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    };
-    await refreshTokenModel.create(refreshData);
+    const rfUser = await refreshTokenModel.findOne({ userId: user._id });
+    console.log(rfUser);
+    if (!rfUser) {
+      const refreshData = {
+        userId: user._id,
+        token: refreshToken,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      };
+      await refreshTokenModel.create(refreshData);
+    } else {
+      rfUser.token = refreshToken;
+      await rfUser.save();
+    }
     return resClientData(
       res,
       200,

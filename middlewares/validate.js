@@ -8,7 +8,6 @@ const validate = (schema, httpCode) => async (req, res, next) => {
 
     return next();
   } catch (err) {
-    console.error("Validation Error:", err);
     return res.status(httpCode || 500).json({
       type: err.name,
       message: err.message,
