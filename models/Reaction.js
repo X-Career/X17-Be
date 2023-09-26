@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import CombineCollection from "../database/index.js";
 
 const ReactionSchema = new mongoose.Schema(
   {
@@ -18,5 +19,5 @@ const ReactionSchema = new mongoose.Schema(
   }
 );
 
-const Reaction = mongoose.model("Reaction", ReactionSchema);
+const Reaction = mongoose.model(CombineCollection.REACTION, ReactionSchema);
 export default Reaction;

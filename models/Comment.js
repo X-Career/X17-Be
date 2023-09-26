@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import CombineCollection from "../database/index.js";
 
 const CommentSchema = new mongoose.Schema(
   {
@@ -18,5 +19,5 @@ const CommentSchema = new mongoose.Schema(
   }
 );
 
-const Comment = mongoose.model("Comment", CommentSchema);
+const Comment = mongoose.model(CombineCollection.COMMENT, CommentSchema);
 export default Comment;

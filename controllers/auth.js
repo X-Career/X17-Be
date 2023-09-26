@@ -10,7 +10,9 @@ import {
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
 import dotenv from "dotenv";
+
 dotenv.config();
+
 const { JWT_SECRET } = process.env;
 
 export const registerUser = asyncHandleController(async (req, res) => {

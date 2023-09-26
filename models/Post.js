@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import CombineCollection from "../database/index.js";
 
 const PostSchema = new mongoose.Schema(
   {
@@ -27,5 +28,5 @@ const PostSchema = new mongoose.Schema(
   }
 );
 
-const Post = mongoose.model("Post", PostSchema);
+const Post = mongoose.model(CombineCollection.POST, PostSchema);
 export default Post;
