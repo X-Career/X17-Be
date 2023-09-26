@@ -2,7 +2,10 @@ import * as yup from "yup";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { promisify } from "util";
+
 dotenv.config();
+
 const { JWT_SECRET } = process.env;
 const resClientData = (res, statusCode, data, message) => {
   res.status(statusCode).send({
@@ -39,10 +42,21 @@ const decodeToken = (token) => {
   return verifyToken;
 };
 
+const asyncHandleController = (controllerFunc) => {
+  return async (req, res, next) => {
+    try {
+      controllerFunc(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
 export {
   resClientData,
   hashingPassword,
   comparePassword,
   generateJwt,
   decodeToken,
+  asyncHandleController,
 };
