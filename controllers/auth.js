@@ -60,7 +60,6 @@ export const signinController = async (req, res) => {
     const accessToken = generateJwt({ userId: user._id }, "2h");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
     const rfUser = await refreshTokenModel.findOne({ userId: user._id });
-    console.log(rfUser);
     if (!rfUser) {
       const refreshData = {
         userId: user._id,
@@ -85,8 +84,7 @@ export const signinController = async (req, res) => {
       "Login successful"
     );
   } catch (error) {
-    console.error("Lỗi đăng nhập:", error);
-    return resClientData(res, 500, null, "An error occurred during login");
+    return resClientData(res, 500, null, error.message);
   }
 };
 //refresh-token
