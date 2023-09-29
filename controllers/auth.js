@@ -57,7 +57,7 @@ export const signinController = async (req, res) => {
     if (!isPasswordValid) {
       return resClientData(res, 401, null, "Incorrect username or password");
     }
-    const accessToken = generateJwt({ userId: user._id }, "10m");
+    const accessToken = generateJwt({ userId: user._id }, "2h");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
     const refreshData = {
       userId: user._id,

@@ -14,6 +14,6 @@ UserRouter.put(
   validate(schemaUpdateUserInfo),
   updateUserInfo
 );
-UserRouter.put("/updateAvatar", authenticate, UserInfoUpdateAvt);
+UserRouter.post("/updateAvatar", authenticate, UserInfoUpdateAvt);
 
 export default UserRouter;

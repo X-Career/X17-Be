@@ -1,7 +1,15 @@
-import { resClientData, decodeToken, hashingPassword } from "../utils/index.js";
+import {
+  resClientData,
+  decodeToken,
+  hashingPassword,
+  comparePassword,
+} from "../utils/index.js";
 import UserModel from "../models/User.js";
 import cloudinary from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import multer from "multer";
 import dotenv from "dotenv";
+
 dotenv.config();
 const { JWT_SECRET } = process.env;
 export const getUserData = async (req, res) => {
@@ -22,8 +30,18 @@ export const getUserData = async (req, res) => {
 // update user info
 export const updateUserInfo = async (req, res) => {
   try {
-    const { userId } = req.authUser;
-    const { firstName, lastName, username, password, gender, bio } = req.body;
+    const user = req.authUser;
+    const {
+      firstName,
+      lastName,
+      username,
+      crrPassword,
+      newPassword,
+      gender,
+      bio,
+      age,
+      dateOfBirth,
+    } = req.body;
 
     const updateFields = {
       firstName,
@@ -31,30 +49,57 @@ export const updateUserInfo = async (req, res) => {
       username,
       gender,
       bio,
+      age,
+      dateOfBirth,
     };
 
-    if (password) {
-      const { hashedPassword, salt } = hashingPassword(password);
-      updateFields.password = hashedPassword;
-      updateFields.salt = salt;
-    }
-    const crrAccount = await UserModel.findByIdAndUpdate(userId, updateFields, {
-      new: true,
-    });
-    if (!crrAccount) throw new Error("User not exist");
+    const trimmedCrrPassword = (crrPassword || "").trim();
+    const trimmedNewPassword = (newPassword || "").trim();
 
+    if (trimmedCrrPassword !== "" && trimmedNewPassword === "") {
+      throw new Error("New password cannot be empty.");
+    } else if (trimmedCrrPassword === "" && trimmedNewPassword !== "") {
+      throw new Error("Current password cannot be empty.");
+    } else if (trimmedCrrPassword !== "" && trimmedNewPassword !== "") {
+      if (trimmedCrrPassword === trimmedNewPassword) {
+        throw new Error(
+          "The new password cannot be the same as the current password."
+        );
+      } else {
+        if (!comparePassword(trimmedCrrPassword, user.salt, user.password)) {
+          return resClientData(res, 401, null, "Password is not correct");
+        } else {
+          const { hashedPassword, salt } = hashingPassword(trimmedNewPassword);
+          updateFields.password = hashedPassword;
+          updateFields.salt = salt;
+        }
+      }
+    }
+
+    const crrAccount = await UserModel.findByIdAndUpdate(
+      user._id,
+      updateFields,
+      {
+        new: true,
+      }
+    );
+    if (!crrAccount) throw new Error("User not exist");
     resClientData(res, 200, crrAccount);
   } catch (error) {
     resClientData(res, 403, null, error.message);
   }
 };
+
 export const UserInfoUpdateAvt = async (req, res) => {
   try {
     const storage = new CloudinaryStorage({
       cloudinary: cloudinary.v2,
       params: {
-        folder: "avatar", // Thư mục trên Cloudinary để lưu trữ ảnh (tuỳ chọn)
-        allowed_formats: ["jpg", "jpeg", "png"], // Các định dạng cho phép (tuỳ chọn)
+        folder: "avatar",
+        allowed_formats: ["jpg", "jpeg", "png"],
+      },
+      filename: (_, file, cb) => {
+        cb(null, file.originalname);
       },
     });
     const upload = multer({ storage }).single("data");
@@ -70,17 +115,17 @@ export const UserInfoUpdateAvt = async (req, res) => {
       if (!file) {
         return resClientData(res, 400, null, "No file uploaded");
       }
-      
+
       // Lấy URL của ảnh trên Cloudinary sau khi upload thành công
       const imageUrl = file.path;
-      const { userId } = req.authUser;
-      const user = await UserModel.findByIdAndUpdate(
-        userId,
+      const user = req.authUser;
+      const crrUser = await UserModel.findByIdAndUpdate(
+        user._id,
         { avatarUrl: imageUrl },
         { new: true }
       );
 
-      if (!user) {
+      if (!crrUser) {
         return resClientData(res, 404, null, "User not found");
       }
 
