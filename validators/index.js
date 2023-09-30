@@ -5,6 +5,7 @@ import {
   PASSWORD_MIN_LENGTH,
   ERROR_MESSAGES,
 } from "./constants.js";
+
 const schemaRegister = yup.object({
   body: yup.object({
     firstName: yup.string().required(ERROR_MESSAGES.required_firstname),
@@ -23,6 +24,7 @@ const schemaRegister = yup.object({
     gender: yup.string().oneOf(GENDERS).required(ERROR_MESSAGES.required),
   }),
 });
+
 const schemaSignIn = yup.object({
   body: yup.object({
     identifier: yup.string().required("Tài khoản không được để trống"),

@@ -94,7 +94,7 @@ export const signinController = async (req, res) => {
 //refresh-token
 export const refreshTokenHandle = async (req, res) => {
   try {
-    const {refreshToken} = req.body
+    const { refreshToken } = req.body;
     const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
 
     const existingRefreshToken = await refreshTokenModel.findOne({
