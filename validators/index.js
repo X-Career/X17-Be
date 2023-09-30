@@ -29,4 +29,28 @@ const schemaSignIn = yup.object({
     password: yup.string().required(ERROR_MESSAGES.required_pass),
   }),
 });
-export { schemaRegister, schemaSignIn };
+const schemaUpdateUserInfo = yup.object({
+  body: yup.object({
+    firstName: yup.string(),
+    lastName: yup.string(),
+    username: yup.string(),
+    bio: yup.string(),
+    newPassword: yup
+      .string()
+      .min(PASSWORD_MIN_LENGTH, ERROR_MESSAGES.passwordLength)
+      .max(PASSWORD_MAX_LENGTH, ERROR_MESSAGES.passwordLength)
+      .matches(/[A-Z]/, ERROR_MESSAGES.passwordUpperCase)
+      .trim()
+      .strict(),
+    gender: yup
+      .string()
+      .test(
+        "Valid Gender",
+        "Gender must be one of the following values: male, female, other",
+        (value) => {
+          return GENDERS.includes(value);
+        }
+      ),
+  }),
+});
+export { schemaRegister, schemaSignIn, schemaUpdateUserInfo };
