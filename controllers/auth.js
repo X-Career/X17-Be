@@ -1,17 +1,21 @@
+import express from "express";
 import {
   resClientData,
   hashingPassword,
   generateJwt,
   comparePassword,
   decodeToken,
+  asyncHandleController,
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
 import dotenv from "dotenv";
+
 dotenv.config();
+
 const { JWT_SECRET } = process.env;
 
-export const registerUser = async (req, res) => {
+export const registerUser = asyncHandleController(async (req, res) => {
   try {
     const { firstName, lastName, username, email, password, gender } = req.body;
 
@@ -20,7 +24,7 @@ export const registerUser = async (req, res) => {
     });
 
     if (existingUser) {
-      return resClientData(res, 400, null, "Username or email already exists");
+      return resClientData(res, 400, null, "Username or email already exists!");
     }
 
     const { hashedPassword, salt } = hashingPassword(password);
@@ -40,9 +44,10 @@ export const registerUser = async (req, res) => {
     console.error(error);
     resClientData(res, 500, null, "Internal Server Error");
   }
-};
+});
+
 //sign in
-export const signinController = async (req, res) => {
+export const signinController = asyncHandleController(async (req, res) => {
   try {
     const { identifier, password } = req.body;
     const user = await UserModel.findOne({
@@ -50,21 +55,28 @@ export const signinController = async (req, res) => {
     });
 
     if (!user) {
-      return resClientData(res, 401, null, "Incorrect username or password");
+      return resClientData(res, 401, null, "User not found!");
     }
 
     const isPasswordValid = comparePassword(password, user.salt, user.password);
     if (!isPasswordValid) {
-      return resClientData(res, 401, null, "Incorrect username or password");
+      return resClientData(res, 401, null, "Invalid credentials!");
     }
     const accessToken = generateJwt({ userId: user._id }, "20m");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
-    const refreshData = {
-      userId: user._id,
-      token: refreshToken,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    };
-    await refreshTokenModel.create(refreshData);
+    const rfUser = await refreshTokenModel.findOne({ userId: user._id });
+    // console.log(rfUser);
+    if (!rfUser) {
+      const refreshData = {
+        userId: user._id,
+        token: refreshToken,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      };
+      await refreshTokenModel.create(refreshData);
+    } else {
+      rfUser.token = refreshToken;
+      await rfUser.save();
+    }
     return resClientData(
       res,
       200,
@@ -75,15 +87,21 @@ export const signinController = async (req, res) => {
         username: user.username,
         avatarUrl: user.avatarUrl,
       },
-      "Login successful"
+      "Login successfully."
     );
   } catch (error) {
     console.error("Lỗi đăng nhập:", error);
-    return resClientData(res, 500, null, "An error occurred during login");
+    return resClientData(
+      res,
+      500,
+      null,
+      "Something went wrong. Please try again."
+    );
   }
-};
+});
+
 //refresh-token
-export const refreshTokenHandle = async (req, res) => {
+export const refreshTokenHandle = asyncHandleController(async (req, res) => {
   try {
     const refreshToken = req.header("Authorization").replace("Bearer ", "");
     const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
@@ -93,7 +111,7 @@ export const refreshTokenHandle = async (req, res) => {
       userId: decodedRefreshToken.userId,
     });
     if (!existingRefreshToken) {
-      return res.status(401).json({ message: "Refresh Token không hợp lệ." });
+      return res.status(401).json({ message: "Invalid refresh token." });
     }
 
     // Generate a new access token
@@ -115,9 +133,9 @@ export const refreshTokenHandle = async (req, res) => {
       res,
       200,
       { token: newAccessToken, RT: newRefreshToken },
-      "Refresh thành công"
+      "Refresh successfully."
     );
   } catch (error) {
     resClientData(res, 400, null, error.message);
   }
-};
+});
