@@ -21,5 +21,8 @@ const RefreshTokenSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-const refreshTokenModel = mongoose.model(CombineCollection.REFRESHTOKEN, RefreshTokenSchema);
+const refreshTokenModel = mongoose.model(
+  CombineCollection.REFRESHTOKEN,
+  RefreshTokenSchema
+);
 export default refreshTokenModel;
