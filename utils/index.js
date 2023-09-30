@@ -7,7 +7,13 @@ const { JWT_SECRET } = process.env;
 const resClientData = (res, statusCode, data, message) => {
   res.status(statusCode).send({
     data: data ? data : null,
-    message: message ? message : data ? "Complete" : "Failed",
+    message: data
+      ? message
+        ? message
+        : "success"
+      : message
+      ? message
+      : "failed",
     success: data ? true : false,
   });
 };
