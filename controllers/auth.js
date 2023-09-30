@@ -13,7 +13,9 @@ const { JWT_SECRET } = process.env;
 
 export const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password, gender } = req.body;
+    let { firstName, lastName, username, email, password, gender } = req.body;
+    email = email.toLowerCase();
+    username = username.toLowerCase();
 
     const existingUser = await UserModel.findOne({
       $or: [{ username }, { email }],
@@ -41,10 +43,12 @@ export const registerUser = async (req, res) => {
     resClientData(res, 500, null, "Internal Server Error");
   }
 };
+
 //sign in
 export const signinController = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+    let { identifier, password } = req.body;
+    identifier = identifier.toLowerCase();
     const user = await UserModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
@@ -90,7 +94,7 @@ export const signinController = async (req, res) => {
 //refresh-token
 export const refreshTokenHandle = async (req, res) => {
   try {
-    const refreshToken = req.header("Authorization").replace("Bearer ", "");
+    const {refreshToken} = req.body
     const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
 
     const existingRefreshToken = await refreshTokenModel.findOne({
