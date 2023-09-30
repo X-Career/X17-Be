@@ -3,25 +3,24 @@ import CombineCollection from "../database/index.js";
 
 const PostSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Types.ObjectId, ref: "User" },
-    title: {
+    vacation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vacation",
+      required: true,
+    },
+    milestones: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Vacation.milestones",
+      },
+    ],
+    content: {
       type: String,
       required: true,
     },
-    desc: {
+    image: {
       type: String,
-      required: true,
     },
-    startDate: {
-      type: String,
-      required: true,
-    },
-    endDate: String,
-    participants: String,
-    reactCounts: Number,
-    reactUsers: [String],
-    comments: [{}],
-    commentUsers: [String],
   },
   {
     timestamps: true,
