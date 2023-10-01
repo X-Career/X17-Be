@@ -129,7 +129,7 @@ export const UserInfoUpdateAvt = async (req, res) => {
         return resClientData(res, 404, null, "User not found");
       }
 
-      return resClientData(res, 200, user, "Avatar uploaded successfully!");
+      return resClientData(res, 200, crrUser, "Avatar uploaded successfully!");
     });
   } catch (error) {
     return resClientData(res, 500, null, error.message);
