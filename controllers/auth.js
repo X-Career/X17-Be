@@ -1,30 +1,28 @@
-import express from "express";
 import {
   resClientData,
   hashingPassword,
   generateJwt,
   comparePassword,
   decodeToken,
-  asyncHandleController,
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 import refreshTokenModel from "../models/refreshToken.js";
 import dotenv from "dotenv";
-
 dotenv.config();
-
 const { JWT_SECRET } = process.env;
 
-export const registerUser = asyncHandleController(async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password, gender } = req.body;
+    let { firstName, lastName, username, email, password, gender } = req.body;
+    email = email.toLowerCase();
+    username = username.toLowerCase();
 
     const existingUser = await UserModel.findOne({
       $or: [{ username }, { email }],
     });
 
     if (existingUser) {
-      return resClientData(res, 400, null, "Username or email already exists!");
+      return resClientData(res, 400, null, "Username or email already exists");
     }
 
     const { hashedPassword, salt } = hashingPassword(password);
@@ -44,28 +42,28 @@ export const registerUser = asyncHandleController(async (req, res) => {
     console.error(error);
     resClientData(res, 500, null, "Internal Server Error");
   }
-});
+};
 
 //sign in
-export const signinController = asyncHandleController(async (req, res) => {
+export const signinController = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+    let { identifier, password } = req.body;
+    identifier = identifier.toLowerCase();
     const user = await UserModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
 
     if (!user) {
-      return resClientData(res, 401, null, "User not found!");
+      return resClientData(res, 401, null, "Incorrect username or password");
     }
 
     const isPasswordValid = comparePassword(password, user.salt, user.password);
     if (!isPasswordValid) {
-      return resClientData(res, 401, null, "Invalid credentials!");
+      return resClientData(res, 401, null, "Incorrect username or password");
     }
     const accessToken = generateJwt({ userId: user._id }, "20m");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
     const rfUser = await refreshTokenModel.findOne({ userId: user._id });
-    // console.log(rfUser);
     if (!rfUser) {
       const refreshData = {
         userId: user._id,
@@ -87,23 +85,16 @@ export const signinController = asyncHandleController(async (req, res) => {
         username: user.username,
         avatarUrl: user.avatarUrl,
       },
-      "Login successfully."
+      "Login successful"
     );
   } catch (error) {
-    console.error("Lỗi đăng nhập:", error);
-    return resClientData(
-      res,
-      500,
-      null,
-      "Something went wrong. Please try again."
-    );
+    return resClientData(res, 500, null, error.message);
   }
-});
-
+};
 //refresh-token
-export const refreshTokenHandle = asyncHandleController(async (req, res) => {
+export const refreshTokenHandle = async (req, res) => {
   try {
-    const refreshToken = req.header("Authorization").replace("Bearer ", "");
+    const { refreshToken } = req.body;
     const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
 
     const existingRefreshToken = await refreshTokenModel.findOne({
@@ -111,7 +102,7 @@ export const refreshTokenHandle = asyncHandleController(async (req, res) => {
       userId: decodedRefreshToken.userId,
     });
     if (!existingRefreshToken) {
-      return res.status(401).json({ message: "Invalid refresh token." });
+      return res.status(401).json({ message: "Refresh Token không hợp lệ." });
     }
 
     // Generate a new access token
@@ -133,9 +124,9 @@ export const refreshTokenHandle = asyncHandleController(async (req, res) => {
       res,
       200,
       { token: newAccessToken, RT: newRefreshToken },
-      "Refresh successfully."
+      "Refresh thành công"
     );
   } catch (error) {
     resClientData(res, 400, null, error.message);
   }
-});
+};
