@@ -13,7 +13,9 @@ const { JWT_SECRET } = process.env;
 
 export const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password, gender } = req.body;
+    let { firstName, lastName, username, email, password, gender } = req.body;
+    email = email.toLowerCase();
+    username = username.toLowerCase();
 
     const existingUser = await UserModel.findOne({
       $or: [{ username }, { email }],
@@ -41,10 +43,12 @@ export const registerUser = async (req, res) => {
     resClientData(res, 500, null, "Internal Server Error");
   }
 };
+
 //sign in
 export const signinController = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+    let { identifier, password } = req.body;
+    identifier = identifier.toLowerCase();
     const user = await UserModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
@@ -59,12 +63,18 @@ export const signinController = async (req, res) => {
     }
     const accessToken = generateJwt({ userId: user._id }, "1d");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
-    const refreshData = {
-      userId: user._id,
-      token: refreshToken,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    };
-    await refreshTokenModel.create(refreshData);
+    const rfUser = await refreshTokenModel.findOne({ userId: user._id });
+    if (!rfUser) {
+      const refreshData = {
+        userId: user._id,
+        token: refreshToken,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      };
+      await refreshTokenModel.create(refreshData);
+    } else {
+      rfUser.token = refreshToken;
+      await rfUser.save();
+    }
     return resClientData(
       res,
       200,
@@ -78,14 +88,13 @@ export const signinController = async (req, res) => {
       "Login successful"
     );
   } catch (error) {
-    console.error("Lỗi đăng nhập:", error);
-    return resClientData(res, 500, null, "An error occurred during login");
+    return resClientData(res, 500, null, error.message);
   }
 };
 //refresh-token
 export const refreshTokenHandle = async (req, res) => {
   try {
-    const refreshToken = req.header("Authorization").replace("Bearer ", "");
+    const { refreshToken } = req.body;
     const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
 
     const existingRefreshToken = await refreshTokenModel.findOne({
