@@ -61,7 +61,7 @@ export const signinController = async (req, res) => {
     if (!isPasswordValid) {
       return resClientData(res, 401, null, "Incorrect username or password");
     }
-    const accessToken = generateJwt({ userId: user._id }, "20m");
+    const accessToken = generateJwt({ userId: user._id }, "10s");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
     const rfUser = await refreshTokenModel.findOne({ userId: user._id });
     if (!rfUser) {
@@ -108,7 +108,7 @@ export const refreshTokenHandle = async (req, res) => {
     // Generate a new access token
     const newAccessToken = generateJwt(
       { userId: decodedRefreshToken.userId },
-      "2h"
+      "10s"
     );
     const newRefreshToken = generateJwt(
       { userId: decodedRefreshToken.userId },
