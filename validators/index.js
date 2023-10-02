@@ -21,7 +21,13 @@ const schemaRegister = yup.object({
       .max(PASSWORD_MAX_LENGTH, ERROR_MESSAGES.passwordLength)
       .matches(/[A-Z]/, ERROR_MESSAGES.passwordUpperCase)
       .required(ERROR_MESSAGES.required_pass),
-    gender: yup.string().oneOf(GENDERS).required(ERROR_MESSAGES.required),
+    gender: yup
+      .string()
+      .oneOf(
+        GENDERS,
+        "Gender must be one of the following values: male, female, other"
+      )
+      .required(ERROR_MESSAGES.required_gender),
   }),
 });
 
@@ -46,12 +52,9 @@ const schemaUpdateUserInfo = yup.object({
       .strict(),
     gender: yup
       .string()
-      .test(
-        "Valid Gender",
-        "Gender must be one of the following values: male, female, other",
-        (value) => {
-          return GENDERS.includes(value);
-        }
+      .oneOf(
+        GENDERS,
+        "Gender must be one of the following values: male, female, other"
       ),
   }),
 });
