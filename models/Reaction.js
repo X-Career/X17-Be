@@ -3,14 +3,19 @@ import CombineCollection from "../database/index.js";
 
 const ReactionSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Types.ObjectId, ref: "User" },
-    postId: { type: mongoose.Types.ObjectId, ref: "Post" },
-    reaction: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    author: {
+    vacationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vacation",
+      required: true,
+    },
+    type: {
       type: String,
+      enum: ["like", "dislike"],
       required: true,
     },
   },

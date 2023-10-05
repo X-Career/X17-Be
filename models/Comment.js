@@ -3,13 +3,17 @@ import CombineCollection from "../database/index.js";
 
 const CommentSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Types.ObjectId, ref: "User" },
-    postId: { type: mongoose.Types.ObjectId, ref: "Post" },
-    content: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    author: {
+    vacationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vacation",
+      required: true,
+    },
+    content: {
       type: String,
       required: true,
     },
