@@ -3,8 +3,17 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { promisify } from "util";
-
+import { parse, format } from "date-fns";
 dotenv.config();
+const parseDate = (dateString) => {
+  const [day, month, year] = dateString.split("/");
+  const parsedDate = parse(
+    `${year}-${month}-${day}T07:00:00`,
+    "yyyy-MM-dd'T'HH:mm:ss",
+    new Date()
+  );
+  return parsedDate;
+};
 
 const { JWT_SECRET } = process.env;
 const resClientData = (res, statusCode, data, message) => {
@@ -65,4 +74,5 @@ export {
   generateJwt,
   decodeToken,
   asyncHandleController,
+  parseDate,
 };

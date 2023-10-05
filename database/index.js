@@ -5,6 +5,7 @@ const CombineCollection = {
   REACTION: "reactions",
   COMMENT: "comments",
   REFRESHTOKEN: "refreshtoken",
+  MILESTONE: "milestone",
 };
 
 export default CombineCollection;

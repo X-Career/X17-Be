@@ -58,4 +58,18 @@ const schemaUpdateUserInfo = yup.object({
       ),
   }),
 });
-export { schemaRegister, schemaSignIn, schemaUpdateUserInfo };
+const schemaCreateVaction = yup.object({
+  body: yup.object({
+    location: yup.string().required("Địa điểm không được để trống"),
+    title: yup.string().required("Tiêu đề không được để trống!"),
+    description: yup.string().required("Mô tả không được để trống"),
+    startDay: yup.string().required("Ngày bắt đầu không được để trống"),
+    endDay: yup.string().required("Ngày kết không được để trống"),
+  }),
+});
+export {
+  schemaRegister,
+  schemaSignIn,
+  schemaUpdateUserInfo,
+  schemaCreateVaction,
+};
