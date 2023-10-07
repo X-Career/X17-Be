@@ -49,13 +49,13 @@ const vacationSchema = new mongoose.Schema(
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
+        ref: CombineCollection.COMMENT,
       },
     ],
     reactions: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Reaction",
+        ref: CombineCollection.REACTION,
       },
     ],
     views: {

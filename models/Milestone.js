@@ -14,12 +14,6 @@ const milestoneSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  posts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: CombineCollection.POST,
-    },
-  ],
 });
 
 const milestoneModel = mongoose.model(
