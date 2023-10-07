@@ -3,15 +3,17 @@ import authenticate from "../middlewares/verifyToken.js";
 import {
   getUserData,
   updateUserInfo,
+  UserInfoUpdateAvt,
+} from "../controllers/userController.js";
+import {
   createVacation,
   getVacationWithMilestones,
-} from "../controllers/index.js";
+} from "../controllers/vacationController.js";
 import {
   schemaUpdateUserInfo,
-  schemaCreateVaction,
+  schemaCreateVacation,
 } from "../validators/index.js";
 import validate from "../middlewares/validate.js";
-import { UserInfoUpdateAvt } from "../controllers/index.js";
 
 const UserRouter = express.Router();
 
@@ -26,7 +28,7 @@ UserRouter.post("/updateAvatar", authenticate, UserInfoUpdateAvt);
 UserRouter.post(
   "/createVacation",
   authenticate,
-  validate(schemaCreateVaction),
+  validate(schemaCreateVacation),
   createVacation
 );
 UserRouter.post("/getVacation", authenticate, getVacationWithMilestones);
