@@ -40,24 +40,6 @@ const vacationSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    milestones: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CombineCollection.MILESTONE,
-      },
-    ],
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
-    reactions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Reaction",
-      },
-    ],
     views: {
       type: Number,
       default: 0,

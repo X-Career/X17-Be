@@ -1,24 +1,16 @@
 import mongoose from "mongoose";
 import CombineCollection from "../database/index.js";
-
 const PostSchema = new mongoose.Schema(
   {
-    vacation: {
+    milestone: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vacation",
-      required: true,
+      ref: CombineCollection.MILESTONE,
     },
-    milestones: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Vacation.milestones",
-      },
-    ],
     content: {
       type: String,
       required: true,
     },
-    image: {
+    images: {
       type: String,
     },
   },
