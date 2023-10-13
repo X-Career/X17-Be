@@ -38,26 +38,9 @@ const vacationSchema = new mongoose.Schema(
     },
     avatarUrl: {
       type: String,
-      default: "",
+      default:
+        "https://res.cloudinary.com/dsdoekr0q/image/upload/v1696919248/avatar/gjqakp6jxzlvmli6ilcy.jpg",
     },
-    milestones: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CombineCollection.MILESTONE,
-      },
-    ],
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
-    reactions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Reaction",
-      },
-    ],
     views: {
       type: Number,
       default: 0,
