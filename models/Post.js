@@ -5,13 +5,13 @@ const PostSchema = new mongoose.Schema(
   {
     vacation: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vacation",
+      ref: CombineCollection.VACATION,
       required: true,
     },
     milestones: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Vacation.milestones",
+        ref: CombineCollection.MILESTONE,
       },
     ],
     content: {

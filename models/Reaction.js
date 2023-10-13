@@ -5,12 +5,12 @@ const ReactionSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: CombineCollection.USERINFO,
       required: true,
     },
     vacationId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vacation",
+      ref: CombineCollection.VACATION,
       required: true,
     },
     type: {
