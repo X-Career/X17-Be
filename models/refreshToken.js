@@ -9,7 +9,7 @@ const RefreshTokenSchema = new mongoose.Schema(
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: CombineCollection.USERINFO,
       required: true,
     },
     expiresAt: {
