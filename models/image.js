@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import CombineCollection from "../controllers/database";
+import CombineCollection from "../database";
 
 const albumSchema = new mongoose.Schema(
   {

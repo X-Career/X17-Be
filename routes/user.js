@@ -5,14 +5,7 @@ import {
   updateUserInfo,
   UserInfoUpdateAvt,
 } from "../controllers/userController.js";
-import {
-  createVacation,
-  getVacationWithMilestones,
-} from "../controllers/vacationController.js";
-import {
-  schemaUpdateUserInfo,
-  schemaCreateVacation,
-} from "../validators/index.js";
+import { schemaUpdateUserInfo } from "../validators/index.js";
 import validate from "../middlewares/validate.js";
 
 const UserRouter = express.Router();
@@ -25,12 +18,5 @@ UserRouter.put(
   updateUserInfo
 );
 UserRouter.post("/updateAvatar", authenticate, UserInfoUpdateAvt);
-UserRouter.post(
-  "/createVacation",
-  authenticate,
-  validate(schemaCreateVacation),
-  createVacation
-);
-UserRouter.post("/getVacation", authenticate, getVacationWithMilestones);
 
 export default UserRouter;
