@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import CombineCollection from "../database/index.js";
-
 const PostSchema = new mongoose.Schema(
   {
     milestone: {

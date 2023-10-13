@@ -38,8 +38,10 @@ const vacationSchema = new mongoose.Schema(
     },
     avatarUrl: {
       type: String,
-      default: "",
+      default:
+        "https://res.cloudinary.com/dsdoekr0q/image/upload/v1696919248/avatar/gjqakp6jxzlvmli6ilcy.jpg",
     },
+<<<<<<< HEAD
     milestones: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -58,6 +60,8 @@ const vacationSchema = new mongoose.Schema(
         ref: CombineCollection.REACTION,
       },
     ],
+=======
+>>>>>>> 7757de963e97c7e9a8af3339ff54f679f4545282
     views: {
       type: Number,
       default: 0,
