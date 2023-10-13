@@ -28,7 +28,6 @@ export const createVacation = async (req, res) => {
       startDay: startDay1,
       endDay: endDay1,
       privacy,
-      milestones: [],
     });
     const numberOfDays = Math.ceil(
       (endDay1.getTime() - startDay1.getTime()) / (1000 * 60 * 60 * 24)
@@ -93,7 +92,11 @@ export const updateVacation = async (req, res) => {
     if (startDay && endDay) {
       const newStartDay = parseDate(startDay);
       const newEndDay = parseDate(endDay);
-      const existingMilestones = await milestoneModel.find({
+      const existingMilestone = await milestoneModel.find({
+        vacation: existingVacation._id,
+      });
+      let existingMilestones = existingMilestone;
+      await milestoneModel.deleteMany({
         vacation: existingVacation._id,
       });
       const numberOfDays = Math.ceil(
@@ -107,6 +110,7 @@ export const updateVacation = async (req, res) => {
           return milestone.date.toISOString() === milestoneDate.toISOString();
         });
         if (existingMilestone) {
+          milestoneModel.insertMany(existingMilestone);
           newMilestones.push(existingMilestone);
         } else {
           const newMilestone = new milestoneModel({

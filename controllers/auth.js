@@ -96,11 +96,11 @@ export const refreshTokenHandle = async (req, res) => {
   try {
     const { refreshToken } = req.body;
     const decodedRefreshToken = decodeToken(refreshToken, JWT_SECRET);
-
     const existingRefreshToken = await refreshTokenModel.findOne({
       token: refreshToken,
       userId: decodedRefreshToken.userId,
     });
+
     if (!existingRefreshToken) {
       return res.status(401).json({ message: "Refresh Token không hợp lệ." });
     }
