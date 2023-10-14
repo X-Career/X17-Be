@@ -41,27 +41,6 @@ const vacationSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/dsdoekr0q/image/upload/v1696919248/avatar/gjqakp6jxzlvmli6ilcy.jpg",
     },
-<<<<<<< HEAD
-    milestones: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CombineCollection.MILESTONE,
-      },
-    ],
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CombineCollection.COMMENT,
-      },
-    ],
-    reactions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CombineCollection.REACTION,
-      },
-    ],
-=======
->>>>>>> 7757de963e97c7e9a8af3339ff54f679f4545282
     views: {
       type: Number,
       default: 0,

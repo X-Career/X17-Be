@@ -3,7 +3,6 @@ import {
   decodeToken,
   hashingPassword,
   comparePassword,
-  parseDate,
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 
