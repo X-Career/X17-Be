@@ -12,7 +12,7 @@ const albumSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    avatarUrl: {
+    coverUrl: {
       type: String,
       default: "",
     },

@@ -6,13 +6,8 @@ const albumSchema = new mongoose.Schema(
     imageUrl: {
       type: String,
       default: "",
+      required: true,
     },
-    album: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CombineCollection.ALBUM,
-      },
-    ],
   },
   {
     timestamps: true,
