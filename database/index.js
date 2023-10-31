@@ -2,7 +2,7 @@ const CombineCollection = {
   USERINFO: "users",
   VACATION: "vacation",
   ALBUM: "albums",
-  IMAGE: "images",
+  MEDIA: "media",
   POST: "posts",
   REACTION: "reactions",
   COMMENT: "comments",

@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
-import CombineCollection from "../database";
+import CombineCollection from "../database/index.js";
 
 const albumSchema = new mongoose.Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: CombineCollection.USERINFO,
+      required: true,
+    },
+    owner: {
+      type: String,
       ref: CombineCollection.USERINFO,
       required: true,
     },
@@ -12,16 +17,15 @@ const albumSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    avatarUrl: {
+    coverUrl: {
       type: String,
+      require: true,
       default: "",
     },
-    imageUrl: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: CombineCollection.IMAGE,
-      },
-    ],
+    privacy: {
+      type: String,
+      default: "public",
+    },
   },
   {
     timestamps: true,

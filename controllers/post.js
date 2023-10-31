@@ -7,7 +7,7 @@ export const createPost = async (req, res) => {
   try {
     const { milestoneId } = req.params;
     const { content, images } = req.body;
-    // console.log(milestoneId);
+
     const milestone = await milestoneModel.findById(milestoneId);
 
     if (!milestone) {
