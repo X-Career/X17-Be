@@ -67,9 +67,15 @@ const schemaCreateVacation = yup.object({
     endDay: yup.string().required("Ngày kết không được để trống"),
   }),
 });
+
+const schemaCreateAlbum = yup.object({
+  body: yup.object({}),
+});
+
 export {
   schemaRegister,
   schemaSignIn,
   schemaUpdateUserInfo,
   schemaCreateVacation,
+  schemaCreateAlbum,
 };

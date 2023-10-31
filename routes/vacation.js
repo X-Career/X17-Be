@@ -9,7 +9,7 @@ import {
   updateVacation,
   getVacation,
   updateCoverVacation,
-} from "../controllers/Vacation.js";
+} from "../controllers/vacationController.js";
 vacationRouter.post(
   "/createVacation",
   authenticate,
