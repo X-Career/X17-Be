@@ -13,6 +13,9 @@ const mediaSchema = new mongoose.Schema(
       default: "",
       required: true,
     },
+    type: {
+      type: String,
+    },
     title: {
       type: String,
       default: "",

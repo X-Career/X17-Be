@@ -10,7 +10,8 @@ export const createMedia = (req, res) => {
       cloudinary: cloudinary.v2,
       params: {
         folder: "media",
-        allowed_formats: ["jpg", "png", "jpeg"],
+        resource_type: "auto",
+        allowed_formats: ["*", "jpg", "png", "jpeg", "mp4", "mov", "avi"],
       },
       filename: (_, file, cb) => {
         cb(null, file.originalname);
@@ -29,11 +30,13 @@ export const createMedia = (req, res) => {
 
       const { albumId } = req.params;
       const title = JSON.parse(req.body.title);
+      const { type } = req.body;
       const mediaUrl = file.path;
 
       const createMedia = await mediaModel.create({
         albumId: albumId,
         mediaUrl: mediaUrl,
+        type: type,
         title: title || "",
       });
       resClientData(res, 200, createMedia, "Success");
@@ -49,7 +52,8 @@ export const createMediaInsideMediaDetails = async (req, res) => {
       cloudinary: cloudinary.v2,
       params: {
         folder: "media",
-        allowed_formats: ["jpg", "png", "jpeg"],
+        resource_type: "auto",
+        allowed_formats: ["*", "jpg", "png", "jpeg", "mp4", "mov", "avi"],
       },
       filename: (_, file, cb) => {
         cb(null, file.originalname);
@@ -68,10 +72,12 @@ export const createMediaInsideMediaDetails = async (req, res) => {
 
       const { albumId } = req.params;
       const mediaUrl = file.path;
+      const { type } = req.body;
 
       const createMedia = await mediaModel.create({
         albumId: albumId,
         mediaUrl: mediaUrl,
+        type: type,
         title: "",
       });
       resClientData(res, 200, createMedia, "Success");
