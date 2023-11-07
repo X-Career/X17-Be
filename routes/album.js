@@ -14,6 +14,6 @@ albumRouter.post("/createAlbum", authenticate, createAlbum);
 albumRouter.get("/getAlbum", authenticate, getAlbum);
 albumRouter.post("/deleteAlbum/:albumId", authenticate, deleteAlbum);
 albumRouter.put("/updateAlbum/:id", authenticate, updateAlbum);
-albumRouter.post("/updateAlbumAvatar", authenticate, updateAlbumAvatar);
+albumRouter.post("/updateAlbumAvatar/:id", authenticate, updateAlbumAvatar);
 
 export default albumRouter;

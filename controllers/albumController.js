@@ -107,9 +107,9 @@ export const updateAlbumAvatar = (req, res) => {
       }
 
       const imageUrl = file.path;
-      const user = req.authUser;
-      const crrAlbum = await albumModel.findOneAndUpdate(
-        { userId: user._id },
+      const { id } = req.params;
+      const crrAlbum = await albumModel.findByIdAndUpdate(
+        id,
         { coverUrl: imageUrl },
         { new: true }
       );
