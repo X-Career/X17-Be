@@ -3,17 +3,13 @@ import {
   decodeToken,
   hashingPassword,
   comparePassword,
-  parseDate,
 } from "../utils/index.js";
 import UserModel from "../models/User.js";
 
 import cloudinary from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
-import dotenv from "dotenv";
 
-dotenv.config();
-const { JWT_SECRET } = process.env;
 export const getUserData = async (req, res) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
@@ -59,17 +55,22 @@ export const updateUserInfo = async (req, res) => {
     const trimmedNewPassword = (newPassword || "").trim();
 
     if (trimmedCrrPassword !== "" && trimmedNewPassword === "") {
-      throw new Error("New password cannot be empty.");
+      throw new Error("Mật khẩu mới không được để trống!");
     } else if (trimmedCrrPassword === "" && trimmedNewPassword !== "") {
-      throw new Error("Current password cannot be empty.");
+      throw new Error("Mật khẩu hiện tại không được để trống!");
     } else if (trimmedCrrPassword !== "" && trimmedNewPassword !== "") {
       if (trimmedCrrPassword === trimmedNewPassword) {
         throw new Error(
-          "The new password cannot be the same as the current password."
+          "Mật khẩu mới không được trùng với mật khẩu hiện tại!!"
         );
       } else {
         if (!comparePassword(trimmedCrrPassword, user.salt, user.password)) {
-          return resClientData(res, 401, null, "Password is not correct");
+          return resClientData(
+            res,
+            401,
+            null,
+            "Mật khẩu hiện tại không đúng.!!"
+          );
         } else {
           const { hashedPassword, salt } = hashingPassword(trimmedNewPassword);
           updateFields.password = hashedPassword;
@@ -111,14 +112,11 @@ export const UserInfoUpdateAvt = async (req, res) => {
         return resClientData(res, 500, null, err.message);
       }
 
-      // Nếu upload thành công, thông tin ảnh sẽ được lưu trong req.file
       const file = req.file;
-
       if (!file) {
         return resClientData(res, 400, null, "No file uploaded");
       }
 
-      // Lấy URL của ảnh trên Cloudinary sau khi upload thành công
       const imageUrl = file.path;
       const user = req.authUser;
       const crrUser = await UserModel.findByIdAndUpdate(

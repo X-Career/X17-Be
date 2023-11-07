@@ -19,6 +19,9 @@ const upload = multer({ storage }).single("data");
 export const createPost = async (req, res) => {
   try {
     const { milestoneId } = req.params;
+    const { content, images } = req.body;
+
+    const milestone = await milestoneModel.findById(milestoneId);
 
     upload(req, res, async (err) => {
       if (err) {

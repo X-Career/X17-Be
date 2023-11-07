@@ -5,7 +5,7 @@ import {
   registerUser,
   signinController,
   refreshTokenHandle,
-} from "../controllers/auth.js";
+} from "../controllers/authController.js";
 const AuthRouter = express.Router();
 
 AuthRouter.post("/register", validate(schemaRegister), registerUser);

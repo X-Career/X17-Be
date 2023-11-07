@@ -1,5 +1,4 @@
 import express from "express";
-import { schemaCreateVaction } from "../validators/index.js";
 import authenticate from "../middlewares/verifyToken.js";
 const vacationRouter = express.Router();
 
@@ -10,7 +9,7 @@ import {
   updateCoverVacation,
   addTripmate,
   removeTripmate,
-} from "../controllers/Vacation.js";
+} from "../controllers/vacationController.js";
 vacationRouter.post("/createVacation", authenticate, createVacation);
 vacationRouter.get("/getVacation/:vacationId", authenticate, getVacation);
 vacationRouter.put("/updateVacation/:vacationId", authenticate, updateVacation);
