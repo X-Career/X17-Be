@@ -1,5 +1,4 @@
 import express from "express";
-import authenticate from "../middlewares/verifyToken.js";
 import {
   createPost,
   deletePost,
@@ -13,7 +12,6 @@ const PostRouter = express.Router();
 PostRouter.post("/create/:milestoneId", createPost);
 PostRouter.put("/update/:postId", updatePost);
 PostRouter.delete("/delete/:postId", deletePost);
-PostRouter.get("/", getPosts);
-PostRouter.get("/:postId", getPost);
+PostRouter.get("/getPost/:milestoneId", getPosts);
 
 export default PostRouter;
