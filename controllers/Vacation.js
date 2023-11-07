@@ -58,9 +58,11 @@ export const createVacation = async (req, res) => {
 export const getVacation = async (req, res) => {
   try {
     const vacationId = req.params;
-    const vacation = await vacationModel.findOne({
-      _id: vacationId.vacationId,
-    });
+    const vacation = await vacationModel
+      .findOne({
+        _id: vacationId.vacationId,
+      })
+      .populate("host");
     if (!vacation) {
       return resClientData(res, 404, null, "Vacation not found");
     }
@@ -178,5 +180,68 @@ export const updateCoverVacation = async (req, res) => {
     });
   } catch (error) {
     return resClientData(res, 500, null, error.message);
+  }
+};
+//add tripmate
+export const addTripmate = async (req, res) => {
+  try {
+    const vacationId = req.params.vacationId;
+    const { tripmates } = req.body;
+    const existingVacation = await vacationModel.findOne({
+      _id: vacationId,
+    });
+
+    if (!existingVacation) {
+      return resClientData(res, 404, null, "Vacation not found");
+    }
+    tripmates.forEach((tripmate) => {
+      const emailExists = existingVacation.participants.some(
+        (participant) => participant === tripmate
+      );
+      if (!emailExists) {
+        existingVacation.participants.push(tripmate);
+      }
+    });
+    await existingVacation.save();
+    resClientData(
+      res,
+      200,
+      existingVacation,
+      "Participants added successfully"
+    );
+  } catch (error) {
+    resClientData(res, 500, [], error.message);
+  }
+};
+//remove tripmate
+export const removeTripmate = async (req, res) => {
+  try {
+    const vacationId = req.params.vacationId;
+    const { email } = req.body;
+    const existingVacation = await vacationModel.findOne({
+      _id: vacationId,
+    });
+
+    if (!existingVacation) {
+      return resClientData(res, 404, null, "Vacation not found");
+    }
+    const emailExists = existingVacation.participants.includes(email);
+
+    if (!emailExists) {
+      return resClientData(res, 404, null, "Email not found in participants");
+    }
+
+    existingVacation.participants.pull(email);
+
+    await existingVacation.save();
+
+    resClientData(
+      res,
+      200,
+      existingVacation,
+      "Participant removed successfully"
+    );
+  } catch (error) {
+    resClientData(res, 500, [], error.message);
   }
 };

@@ -8,6 +8,8 @@ import {
   updateVacation,
   getVacation,
   updateCoverVacation,
+  addTripmate,
+  removeTripmate,
 } from "../controllers/Vacation.js";
 vacationRouter.post("/createVacation", authenticate, createVacation);
 vacationRouter.get("/getVacation/:vacationId", authenticate, getVacation);
@@ -16,5 +18,11 @@ vacationRouter.post(
   "/updateCover/:vacationId",
   authenticate,
   updateCoverVacation
+);
+vacationRouter.post("/addTripmates/:vacationId", authenticate, addTripmate);
+vacationRouter.post(
+  "/removeTripmates/:vacationId",
+  authenticate,
+  removeTripmate
 );
 export default vacationRouter;
