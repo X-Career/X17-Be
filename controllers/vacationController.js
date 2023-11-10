@@ -4,6 +4,7 @@ import { resClientData, parseDate } from "../utils/index.js";
 import cloudinary from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
+
 //create Vacation
 export const createVacation = async (req, res) => {
   try {
@@ -54,6 +55,7 @@ export const createVacation = async (req, res) => {
     return resClientData(res, 401, null, error.message);
   }
 };
+
 //get Vacation
 export const getVacation = async (req, res) => {
   try {
@@ -72,6 +74,37 @@ export const getVacation = async (req, res) => {
     return resClientData(res, 500, null, error.message);
   }
 };
+
+// get all vacations
+export const getAllVacations = async (req, res) => {
+  try {
+    const vacations = await vacationModel.find().sort({ startDay: -1 });
+
+    return resClientData(res, 200, vacations, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
+  }
+};
+
+// get 4 vacations for Homepage
+export const getFourVacations = async (req, res) => {
+  try {
+    const homeVacations = await vacationModel
+      .find()
+      .sort({ startDay: -1 })
+      .limit(4)
+      .toArray();
+
+    console.log(homeVacations);
+
+    // const latestHomeVacations = vacations.slice(0, 4);
+
+    return resClientData(res, 200, homeVacations, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
+  }
+};
+
 //update Vacation
 export const updateVacation = async (req, res) => {
   try {
