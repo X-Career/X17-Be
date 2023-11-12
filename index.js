@@ -14,8 +14,20 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
+    origin: function (origin, callback) {
+      if (
+        [
+          "http://localhost:3000",
+          "https://x17-project-hdt.vercel.app",
+        ].includes(origin)
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`${origin} not allowed by our CORS Policy.`));
+    },
+    optionsSuccessStatus: 200,
     credentials: true,
-    origin: ["http://localhost:3000"],
   })
 );
 app.use(cookieParser());
