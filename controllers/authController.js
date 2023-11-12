@@ -39,8 +39,7 @@ export const registerUser = async (req, res) => {
     await newUser.save();
     resClientData(res, 201, newUser, "User registered successfully");
   } catch (error) {
-    console.error(error);
-    resClientData(res, 500, null, "Internal Server Error");
+    return resClientData(res, 500, null, "Internal Server Error");
   }
 };
 

@@ -86,25 +86,6 @@ export const getAllVacations = async (req, res) => {
   }
 };
 
-// get 4 vacations for Homepage
-export const getFourVacations = async (req, res) => {
-  try {
-    const homeVacations = await vacationModel
-      .find()
-      .sort({ startDay: -1 })
-      .limit(4)
-      .toArray();
-
-    console.log(homeVacations);
-
-    // const latestHomeVacations = vacations.slice(0, 4);
-
-    return resClientData(res, 200, homeVacations, "Success!");
-  } catch (error) {
-    return resClientData(res, 500, null, error.message);
-  }
-};
-
 //update Vacation
 export const updateVacation = async (req, res) => {
   try {
