@@ -12,6 +12,7 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -30,7 +31,6 @@ app.use(
     credentials: true,
   })
 );
-app.use(cookieParser());
 
 const { PORT } = process.env || 9000;
 const { MONGO_URL, CLOUD_NAME, API_KEY, API_SECRET } = process.env;
@@ -47,16 +47,18 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.get("/", (_, res) => {
-      res.send({
-        message: "success",
-      });
-    });
-
-    app.use("/api/v1", CombineRouter);
-
-    app.listen(PORT, () =>
-      console.log(`Server running on: http://localhost:${PORT}`)
-    );
+    console.log("DB Connection Successful");
   })
   .catch((error) => console.log(error));
+
+app.get("/", (_, res) => {
+  res.send({
+    message: "success",
+  });
+});
+
+app.use("/api/v1", CombineRouter);
+
+app.listen(PORT, () =>
+  console.log(`Server running on: http://localhost:${PORT}`)
+);
