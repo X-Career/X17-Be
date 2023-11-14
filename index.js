@@ -7,30 +7,18 @@ import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
-
 const app = express();
 
 // Middlewares
-app.use(express.json());
-app.use(cookieParser());
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (
-        [
-          "http://localhost:3000",
-          "https://x17-project-hdt.vercel.app",
-        ].includes(origin)
-      ) {
-        return callback(null, true);
-      }
-
-      return callback(new Error(`${origin} not allowed by our CORS Policy.`));
-    },
+    origin: ["http://localhost:3000", "https://x17-project-hdt.vercel.app"],
     optionsSuccessStatus: 200,
     credentials: true,
   })
 );
+app.use(express.json());
+app.use(cookieParser());
 
 const { PORT } = process.env || 9000;
 const { MONGO_URL, CLOUD_NAME, API_KEY, API_SECRET } = process.env;
