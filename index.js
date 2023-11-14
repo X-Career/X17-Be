@@ -48,7 +48,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.get("", (_, res) => {
+    app.get("/", (_, res) => {
       res.send({
         message: "success",
       });
