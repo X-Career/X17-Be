@@ -31,7 +31,6 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use("/api/v1", CombineRouter);
 
 const { PORT } = process.env || 9000;
 const { MONGO_URL, CLOUD_NAME, API_KEY, API_SECRET } = process.env;
