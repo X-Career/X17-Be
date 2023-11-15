@@ -75,12 +75,43 @@ export const getVacation = async (req, res) => {
   }
 };
 
+// get home vacations
+export const getHomeVacations = async (req, res) => {
+  try {
+    const page = parseInt(req.params.page) || 1;
+    const pageSize = parseInt(req.params.pageSize) || 4;
+
+    const totalVacations = await vacationModel.countDocuments();
+    const totalPages = Math.ceil(totalVacations / pageSize);
+
+    if (page > totalPages) {
+      return res.status(404).json({ message: "No data available" });
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    const vacations = await vacationModel
+      .find()
+      .skip(skip)
+      .limit(pageSize)
+      .sort({ createdAt: -1 })
+      .populate("host");
+
+    resClientData(res, 200, vacations, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
+  }
+};
+
 // get all vacations
 export const getAllVacations = async (req, res) => {
   try {
-    const vacations = await vacationModel.find().sort({ startDay: -1 });
+    const vacations = await vacationModel
+      .find()
+      .sort({ createdAt: -1 })
+      .populate("host");
 
-    return resClientData(res, 200, vacations, "Success!");
+    resClientData(res, 200, vacations, "Success!");
   } catch (error) {
     return resClientData(res, 500, null, error.message);
   }
@@ -149,6 +180,7 @@ export const updateVacation = async (req, res) => {
     return resClientData(res, 500, null, error.message);
   }
 };
+
 //upload ảnh bìa
 export const updateCoverVacation = async (req, res) => {
   try {
@@ -196,6 +228,7 @@ export const updateCoverVacation = async (req, res) => {
     return resClientData(res, 500, null, error.message);
   }
 };
+
 //add tripmate
 export const addTripmate = async (req, res) => {
   try {
@@ -227,6 +260,7 @@ export const addTripmate = async (req, res) => {
     resClientData(res, 500, [], error.message);
   }
 };
+
 //remove tripmate
 export const removeTripmate = async (req, res) => {
   try {

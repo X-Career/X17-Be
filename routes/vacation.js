@@ -9,6 +9,7 @@ import {
   updateCoverVacation,
   addTripmate,
   removeTripmate,
+  getHomeVacations,
   getAllVacations,
 } from "../controllers/vacationController.js";
 
@@ -26,6 +27,7 @@ vacationRouter.post(
   authenticate,
   removeTripmate
 );
-vacationRouter.get("/getVacations", authenticate, getAllVacations);
+vacationRouter.get("/getVacations/:page/:pageSize", getHomeVacations);
+vacationRouter.get("/get-vacations", getAllVacations);
 
 export default vacationRouter;
