@@ -3,6 +3,11 @@ import CombineCollection from "../database/index.js";
 
 const mediaSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: CombineCollection.USERINFO,
+      required: true,
+    },
     albumId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: CombineCollection.ALBUM,
