@@ -39,7 +39,7 @@ const vacationSchema = new mongoose.Schema(
     avatarUrl: {
       type: String,
       default:
-        "https://res.cloudinary.com/dsdoekr0q/image/upload/v1696919248/avatar/gjqakp6jxzlvmli6ilcy.jpg",
+        "https://res.cloudinary.com/dsdoekr0q/image/upload/v1699541436/avatar/fbvlbx31mhzcmzbvs98j.jpg",
     },
     views: {
       type: Number,

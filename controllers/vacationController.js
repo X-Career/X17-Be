@@ -72,6 +72,9 @@ export const getVacation = async (req, res) => {
     return resClientData(res, 500, null, error.message);
   }
 };
+
+//get All
+
 //update Vacation
 export const updateVacation = async (req, res) => {
   try {
