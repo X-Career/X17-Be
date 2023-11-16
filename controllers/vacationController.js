@@ -140,6 +140,7 @@ export const getUserVacations = async (req, res) => {
 // get profile vacations
 export const getProfileVacations = async (req, res) => {
   try {
+    const user = req.authUser;
     let page = parseInt(req.params.page) || 1;
     let pageSize = parseInt(req.params.pageSize) || 6;
     page = Math.max(1, page);
