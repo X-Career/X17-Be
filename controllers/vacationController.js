@@ -140,7 +140,7 @@ export const getUserVacations = async (req, res) => {
 // get profile vacations
 export const getProfileVacations = async (req, res) => {
   try {
-    const user = req.authUser;
+    const { hostId } = req.params;
     let page = parseInt(req.params.page) || 1;
     let pageSize = parseInt(req.params.pageSize) || 6;
     page = Math.max(1, page);
@@ -156,7 +156,7 @@ export const getProfileVacations = async (req, res) => {
     const skip = (page - 1) * pageSize;
 
     const vacations = await vacationModel
-      .find({ host: user._id })
+      .find({ host: hostId })
       .skip(skip)
       .limit(pageSize)
       .sort({ createdAt: -1 })
