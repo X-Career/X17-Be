@@ -34,8 +34,6 @@ export const getComment = async (req, res) => {
       existingVacation.views = existingVacation.views + 1;
       await existingVacation.save();
     }
-
-    console.log(existingVacation.views);
     if (commentList.length > 0) {
       resClientData(res, 200, commentList, "Get comment success");
     } else {
