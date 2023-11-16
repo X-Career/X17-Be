@@ -126,7 +126,6 @@ export const getAllVacations = async (req, res) => {
 export const getUserVacations = async (req, res) => {
   try {
     const user = req.authUser;
-    console.log(user);
     const vacations = await vacationModel.find({ host: user._id }).exec();
 
     if (!vacations)
