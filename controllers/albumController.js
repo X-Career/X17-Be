@@ -61,15 +61,10 @@ export const getAlbum = async (req, res) => {
 // Get all albums
 export const getAllAlbums = async (req, res) => {
   try {
-    const page = parseInt(req.params.page) || 1;
-    const pageSize = 4;
-    const skip = (page - 1) * pageSize;
-
     const albums = await albumModel
       .find()
-      .skip(skip)
-      .limit(pageSize)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .populate("userId");
 
     resClientData(res, 200, albums, "Success!");
   } catch (error) {
