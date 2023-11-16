@@ -3,6 +3,7 @@ import authenticate from "../middlewares/verifyToken.js";
 import {
   createAlbum,
   getAlbum,
+  getOtherUserAlbum,
   deleteAlbum,
   updateAlbum,
   updateAlbumAvatar,
@@ -13,6 +14,7 @@ const albumRouter = Router();
 
 albumRouter.post("/createAlbum", authenticate, createAlbum);
 albumRouter.get("/getAlbum", authenticate, getAlbum);
+albumRouter.get("/getOtherUserAlbum/:id", authenticate, getOtherUserAlbum);
 albumRouter.get("/get-albums", getAllAlbums);
 albumRouter.post("/deleteAlbum/:albumId", authenticate, deleteAlbum);
 albumRouter.put("/updateAlbum/:id", authenticate, updateAlbum);

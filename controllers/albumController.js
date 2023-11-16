@@ -58,6 +58,20 @@ export const getAlbum = async (req, res) => {
   }
 };
 
+// get other user's albums
+export const getOtherUserAlbum = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const album = await albumModel.find({ userId: id });
+    if (!album) {
+      return resClientData(res, 404, null, "Album not found");
+    }
+    resClientData(res, 200, album, "Album retrieved successfully");
+  } catch (error) {
+    resClientData(res, 403, null, error.message);
+  }
+};
+
 // Get all albums
 export const getAllAlbums = async (req, res) => {
   try {
