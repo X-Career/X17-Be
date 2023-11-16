@@ -25,6 +25,18 @@ export const getUserData = async (req, res) => {
     resClientData(res, 403, null, error.message);
   }
 };
+
+export const getUsersInfo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const users = await UserModel.findById(id).select("-password");
+    if (!users) throw new Error("User profile not found");
+    return resClientData(res, 200, users, "Find success");
+  } catch (error) {
+    resClientData(res, 403, null, error.message);
+  }
+};
+
 // update user info
 export const updateUserInfo = async (req, res) => {
   try {
