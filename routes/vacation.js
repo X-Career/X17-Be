@@ -31,7 +31,7 @@ vacationRouter.post(
 vacationRouter.get("/getVacations/:page/:pageSize", getHomeVacations);
 vacationRouter.get("/get-vacations", getAllVacations);
 vacationRouter.get(
-  "/getProfileVacations/:page/:pageSize",
+  "/getProfileVacations/:page/:pageSize/:hostId",
   authenticate,
   getProfileVacations
 );
