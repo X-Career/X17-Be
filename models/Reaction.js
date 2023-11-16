@@ -13,11 +13,6 @@ const ReactionSchema = new mongoose.Schema(
       ref: CombineCollection.VACATION,
       required: true,
     },
-    type: {
-      type: String,
-      enum: ["like", "dislike"],
-      required: true,
-    },
   },
   {
     timestamps: true,

@@ -7,6 +7,7 @@ import PostRouter from "./post.js";
 import commentRouter from "./comment.js";
 import albumRouter from "./album.js";
 import mediaRouter from "./media.js";
+import reactionRouter from "./reaction.js";
 
 const CombineRouter = Router();
 
@@ -18,5 +19,5 @@ CombineRouter.use("/media", mediaRouter);
 CombineRouter.use("/milestone", milestoneRouter);
 CombineRouter.use("/post", PostRouter);
 CombineRouter.use("/comment", commentRouter);
-
+CombineRouter.use("/reaction", reactionRouter);
 export default CombineRouter;

@@ -78,8 +78,10 @@ export const getVacation = async (req, res) => {
 // get home vacations
 export const getHomeVacations = async (req, res) => {
   try {
-    const page = parseInt(req.params.page) || 1;
-    const pageSize = parseInt(req.params.pageSize) || 6;
+    let page = parseInt(req.params.page) || 1;
+    let pageSize = parseInt(req.params.pageSize) || 4;
+    page = Math.max(1, page);
+    pageSize = Math.max(1, Math.min(10, pageSize));
 
     const totalVacations = await vacationModel.countDocuments();
     const totalPages = Math.ceil(totalVacations / pageSize);
@@ -96,6 +98,9 @@ export const getHomeVacations = async (req, res) => {
       .limit(pageSize)
       .sort({ createdAt: -1 })
       .populate("host");
+
+    // Thêm thông tin về trang vào Header Response
+    res.header("X-Total-Pages", totalPages);
 
     resClientData(res, 200, vacations, "Success!");
   } catch (error) {

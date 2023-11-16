@@ -29,7 +29,13 @@ export const getComment = async (req, res) => {
     const commentList = await Comment.find({ vacationId: vacationId })
       .populate("user")
       .sort({ createdAt: -1 });
+    const existingVacation = await vacationModel.findById(vacationId);
+    if (existingVacation) {
+      existingVacation.views = existingVacation.views + 1;
+      await existingVacation.save();
+    }
 
+    console.log(existingVacation.views);
     if (commentList.length > 0) {
       resClientData(res, 200, commentList, "Get comment success");
     } else {
