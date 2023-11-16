@@ -80,10 +80,8 @@ export const getHomeVacations = async (req, res) => {
   try {
     let page = parseInt(req.params.page) || 1;
     let pageSize = parseInt(req.params.pageSize) || 4;
-
-    // Xác nhận rằng page và pageSize là số dương và không vượt quá giới hạn
     page = Math.max(1, page);
-    pageSize = Math.max(1, Math.min(10, pageSize)); // Giới hạn pageSize từ 1 đến 10, ví dụ
+    pageSize = Math.max(1, Math.min(10, pageSize));
 
     const totalVacations = await vacationModel.countDocuments();
     const totalPages = Math.ceil(totalVacations / pageSize);
@@ -121,6 +119,22 @@ export const getAllVacations = async (req, res) => {
     resClientData(res, 200, vacations, "Success!");
   } catch (error) {
     return resClientData(res, 500, null, error.message);
+  }
+};
+
+// get user vacations
+export const getUserVacations = async (req, res) => {
+  try {
+    const user = req.authUser;
+    console.log(user);
+    const vacations = await vacationModel.find({ host: user._id }).exec();
+
+    if (!vacations)
+      return resClientData(res, 404, null, "No vacations founded!");
+
+    resClientData(res, 200, vacations, "Vacations loaded successfully!");
+  } catch (error) {
+    resClientData(res, 403, null, error.message);
   }
 };
 
