@@ -58,6 +58,25 @@ export const getAlbum = async (req, res) => {
   }
 };
 
+// Get all albums
+export const getAllAlbums = async (req, res) => {
+  try {
+    const page = parseInt(req.params.page) || 1;
+    const pageSize = 4;
+    const skip = (page - 1) * pageSize;
+
+    const albums = await albumModel
+      .find()
+      .skip(skip)
+      .limit(pageSize)
+      .sort({ createdAt: -1 });
+
+    resClientData(res, 200, albums, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
+  }
+};
+
 export const deleteAlbum = async (req, res) => {
   try {
     const { albumId } = req.params;
@@ -81,6 +100,7 @@ export const updateAlbum = async (req, res) => {
     resClientData(res, 403, null, error.message);
   }
 };
+
 export const updateAlbumAvatar = (req, res) => {
   try {
     const storage = new CloudinaryStorage({

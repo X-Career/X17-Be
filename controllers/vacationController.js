@@ -4,6 +4,7 @@ import { resClientData, parseDate } from "../utils/index.js";
 import cloudinary from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
+
 //create Vacation
 export const createVacation = async (req, res) => {
   try {
@@ -54,6 +55,7 @@ export const createVacation = async (req, res) => {
     return resClientData(res, 401, null, error.message);
   }
 };
+
 //get Vacation
 export const getVacation = async (req, res) => {
   try {
@@ -73,7 +75,54 @@ export const getVacation = async (req, res) => {
   }
 };
 
-//get All
+// get home vacations
+export const getHomeVacations = async (req, res) => {
+  try {
+    let page = parseInt(req.params.page) || 1;
+    let pageSize = parseInt(req.params.pageSize) || 4;
+
+    // Xác nhận rằng page và pageSize là số dương và không vượt quá giới hạn
+    page = Math.max(1, page);
+    pageSize = Math.max(1, Math.min(10, pageSize)); // Giới hạn pageSize từ 1 đến 10, ví dụ
+
+    const totalVacations = await vacationModel.countDocuments();
+    const totalPages = Math.ceil(totalVacations / pageSize);
+
+    if (page > totalPages) {
+      return res.status(404).json({ message: "No data available" });
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    const vacations = await vacationModel
+      .find()
+      .skip(skip)
+      .limit(pageSize)
+      .sort({ createdAt: -1 })
+      .populate("host");
+
+    // Thêm thông tin về trang vào Header Response
+    res.header("X-Total-Pages", totalPages);
+
+    resClientData(res, 200, vacations, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
+  }
+};
+
+// get all vacations
+export const getAllVacations = async (req, res) => {
+  try {
+    const vacations = await vacationModel
+      .find()
+      .sort({ createdAt: -1 })
+      .populate("host");
+
+    resClientData(res, 200, vacations, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
+  }
+};
 
 //update Vacation
 export const updateVacation = async (req, res) => {
@@ -138,6 +187,7 @@ export const updateVacation = async (req, res) => {
     return resClientData(res, 500, null, error.message);
   }
 };
+
 //upload ảnh bìa
 export const updateCoverVacation = async (req, res) => {
   try {
@@ -185,6 +235,7 @@ export const updateCoverVacation = async (req, res) => {
     return resClientData(res, 500, null, error.message);
   }
 };
+
 //add tripmate
 export const addTripmate = async (req, res) => {
   try {
@@ -216,6 +267,7 @@ export const addTripmate = async (req, res) => {
     resClientData(res, 500, [], error.message);
   }
 };
+
 //remove tripmate
 export const removeTripmate = async (req, res) => {
   try {

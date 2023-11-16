@@ -5,10 +5,8 @@ import vacationModel from "../models/Vacation.js";
 export const createComment = async (req, res) => {
   try {
     const { vacationId } = req.params;
-    console.log(vacationId);
     const { content } = req.body;
     const host = req.authUser;
-    console.log(host._id);
     const existingVacation = await vacationModel.findById(vacationId);
     if (!existingVacation) {
       resClientData(res, 400, {}, "Vacation not found!");

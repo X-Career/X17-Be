@@ -29,11 +29,13 @@ export const createMedia = (req, res) => {
       }
 
       const { albumId } = req.params;
+      const user = req.authUser;
       const title = JSON.parse(req.body.title);
       const { type } = req.body;
       const mediaUrl = file.path;
 
       const createMedia = await mediaModel.create({
+        userId: user._id,
         albumId: albumId,
         mediaUrl: mediaUrl,
         type: type,
@@ -71,10 +73,12 @@ export const createMediaInsideMediaDetails = async (req, res) => {
       }
 
       const { albumId } = req.params;
+      const user = req.authUser;
       const mediaUrl = file.path;
       const { type } = req.body;
 
       const createMedia = await mediaModel.create({
+        userId: user._id,
         albumId: albumId,
         mediaUrl: mediaUrl,
         type: type,

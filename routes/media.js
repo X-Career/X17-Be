@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authenticate from "../middlewares/verifyToken.js";
-
+import checkHost from "../middlewares/checkHost.js";
 import {
   createMedia,
   createMediaInsideMediaDetails,
@@ -25,6 +25,7 @@ mediaRouter.post(
   deleteMediaFromAlbum
 );
 mediaRouter.get("/getMedia/:albumId", authenticate, getMedia);
+mediaRouter.get("/getMediaEdit/:albumId", authenticate, checkHost, getMedia);
 mediaRouter.put("/updateMedia/:id", authenticate, updateMedia);
 
 export default mediaRouter;

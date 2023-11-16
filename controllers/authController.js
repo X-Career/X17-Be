@@ -39,8 +39,7 @@ export const registerUser = async (req, res) => {
     await newUser.save();
     resClientData(res, 201, newUser, "User registered successfully");
   } catch (error) {
-    console.error(error);
-    resClientData(res, 500, null, "Internal Server Error");
+    return resClientData(res, 500, null, "Internal Server Error");
   }
 };
 
@@ -61,7 +60,7 @@ export const signinController = async (req, res) => {
     if (!isPasswordValid) {
       return resClientData(res, 401, null, "Incorrect username or password");
     }
-    const accessToken = generateJwt({ userId: user._id }, "5m");
+    const accessToken = generateJwt({ userId: user._id }, "15m");
     const refreshToken = generateJwt({ userId: user._id }, "30d");
     const rfUser = await refreshTokenModel.findOne({ userId: user._id });
     if (!rfUser) {
