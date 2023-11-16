@@ -79,7 +79,7 @@ export const getVacation = async (req, res) => {
 export const getHomeVacations = async (req, res) => {
   try {
     let page = parseInt(req.params.page) || 1;
-    let pageSize = parseInt(req.params.pageSize) || 4;
+    let pageSize = parseInt(req.params.pageSize) || 6;
     page = Math.max(1, page);
     pageSize = Math.max(1, Math.min(10, pageSize));
 
@@ -134,6 +134,39 @@ export const getUserVacations = async (req, res) => {
     resClientData(res, 200, vacations, "Vacations loaded successfully!");
   } catch (error) {
     resClientData(res, 403, null, error.message);
+  }
+};
+
+// get profile vacations
+export const getProfileVacations = async (req, res) => {
+  try {
+    let page = parseInt(req.params.page) || 1;
+    let pageSize = parseInt(req.params.pageSize) || 6;
+    page = Math.max(1, page);
+    pageSize = Math.max(1, Math.min(10, pageSize));
+
+    const totalVacations = await vacationModel.countDocuments();
+    const totalPages = Math.ceil(totalVacations / pageSize);
+
+    if (page > totalPages) {
+      return res.status(404).json({ message: "No data available" });
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    const vacations = await vacationModel
+      .find({ host: user._id })
+      .skip(skip)
+      .limit(pageSize)
+      .sort({ createdAt: -1 })
+      .populate("host");
+
+    // Thêm thông tin về trang vào Header Response
+    res.header("X-Total-Pages", totalPages);
+
+    resClientData(res, 200, vacations, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
   }
 };
 
