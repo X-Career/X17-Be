@@ -79,7 +79,7 @@ export const getVacation = async (req, res) => {
 export const getHomeVacations = async (req, res) => {
   try {
     const page = parseInt(req.params.page) || 1;
-    const pageSize = parseInt(req.params.pageSize) || 4;
+    const pageSize = parseInt(req.params.pageSize) || 6;
 
     const totalVacations = await vacationModel.countDocuments();
     const totalPages = Math.ceil(totalVacations / pageSize);
@@ -114,6 +114,22 @@ export const getAllVacations = async (req, res) => {
     resClientData(res, 200, vacations, "Success!");
   } catch (error) {
     return resClientData(res, 500, null, error.message);
+  }
+};
+
+// get user vacations
+export const getUserVacations = async (req, res) => {
+  try {
+    const user = req.authUser;
+    console.log(user);
+    const vacations = await vacationModel.find({ host: user._id }).exec();
+
+    if (!vacations)
+      return resClientData(res, 404, null, "No vacations founded!");
+
+    resClientData(res, 200, vacations, "Vacations loaded successfully!");
+  } catch (error) {
+    resClientData(res, 403, null, error.message);
   }
 };
 
