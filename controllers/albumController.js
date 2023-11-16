@@ -58,6 +58,39 @@ export const getAlbum = async (req, res) => {
   }
 };
 
+// get home albums
+export const getHomeAlbums = async (req, res) => {
+  try {
+    let page = parseInt(req.params.page) || 1;
+    let pageSize = parseInt(req.params.pageSize) || 6;
+    page = Math.max(1, page);
+    pageSize = Math.max(1, Math.min(10, pageSize));
+
+    const totalVacations = await albumModel.countDocuments();
+    const totalPages = Math.ceil(totalVacations / pageSize);
+
+    if (page > totalPages) {
+      return res.status(404).json({ message: "No data available" });
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    const albums = await albumModel
+      .find()
+      .skip(skip)
+      .limit(pageSize)
+      .sort({ createdAt: -1 })
+      .populate("userId");
+
+    // Thêm thông tin về trang vào Header Response
+    res.header("X-Total-Pages", totalPages);
+
+    resClientData(res, 200, albums, "Success!");
+  } catch (error) {
+    return resClientData(res, 500, null, error.message);
+  }
+};
+
 // get other user's albums
 export const getOtherUserAlbum = async (req, res) => {
   try {
