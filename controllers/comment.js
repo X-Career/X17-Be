@@ -43,3 +43,15 @@ export const getComment = async (req, res) => {
     resClientData(res, 400, {}, error.message);
   }
 };
+export const deleteComment = async (req, res) => {
+  try {
+    const { cmtId } = req.params;
+    const deletedCmt = await Comment.findByIdAndRemove(cmtId);
+    if (!deletedCmt)
+      return resClientData(res, 400, null, "Something went wrong");
+
+    return resClientData(res, 200, deleteComment, "Comment has been deleted!");
+  } catch (error) {
+    resClientData(res, 400, {}, error.message);
+  }
+};
