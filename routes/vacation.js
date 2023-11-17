@@ -12,6 +12,7 @@ import {
   getHomeVacations,
   getAllVacations,
   getProfileVacations,
+  getUserVacations,
 } from "../controllers/vacationController.js";
 
 vacationRouter.post("/createVacation", authenticate, createVacation);
@@ -35,5 +36,6 @@ vacationRouter.get(
   authenticate,
   getProfileVacations
 );
+vacationRouter.get("/getUserVacations", authenticate, getUserVacations);
 
 export default vacationRouter;

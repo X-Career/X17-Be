@@ -126,7 +126,10 @@ export const getAllVacations = async (req, res) => {
 export const getUserVacations = async (req, res) => {
   try {
     const user = req.authUser;
-    const vacations = await vacationModel.find({ host: user._id }).exec();
+    const vacations = await vacationModel
+      .find({ host: user._id })
+      .sort({ createdAt: -1 })
+      .exec();
 
     if (!vacations)
       return resClientData(res, 404, null, "No vacations founded!");
