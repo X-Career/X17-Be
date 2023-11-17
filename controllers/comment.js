@@ -1,4 +1,3 @@
-import express from "express";
 import { resClientData } from "../utils/index.js";
 import Comment from "../models/Comment.js";
 import vacationModel from "../models/Vacation.js";
