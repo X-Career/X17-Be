@@ -125,10 +125,11 @@ export const getAllVacations = async (req, res) => {
 // get user vacations
 export const getUserVacations = async (req, res) => {
   try {
-    const user = req.authUser;
+    const { hostId } = req.params;
     const vacations = await vacationModel
-      .find({ host: user._id })
+      .find({ host: hostId })
       .sort({ createdAt: -1 })
+      .populate("host")
       .exec();
 
     if (!vacations)
