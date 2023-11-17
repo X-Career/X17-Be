@@ -36,6 +36,6 @@ vacationRouter.get(
   authenticate,
   getProfileVacations
 );
-vacationRouter.get("/getUserVacations", authenticate, getUserVacations);
+vacationRouter.get("/getUserVacations/:hostId", authenticate, getUserVacations);
 
 export default vacationRouter;
