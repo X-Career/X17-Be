@@ -76,7 +76,7 @@ export const getHomeAlbums = async (req, res) => {
     const skip = (page - 1) * pageSize;
 
     const albums = await albumModel
-      .find()
+      .find({ privacy: "public" })
       .skip(skip)
       .limit(pageSize)
       .sort({ createdAt: -1 })
@@ -109,7 +109,7 @@ export const getOtherUserAlbum = async (req, res) => {
 export const getAllAlbums = async (req, res) => {
   try {
     const albums = await albumModel
-      .find()
+      .find({ privacy: "public" })
       .sort({ createdAt: -1 })
       .populate("userId");
 
@@ -131,10 +131,10 @@ export const deleteAlbum = async (req, res) => {
 export const updateAlbum = async (req, res) => {
   try {
     const { id } = req.params;
-    const { albumName } = req.body;
+    const { albumName, privacy } = req.body;
     const updateAlbum = await albumModel.findByIdAndUpdate(
       id,
-      { albumName: albumName },
+      { albumName: albumName, privacy: privacy },
       { new: true }
     );
     resClientData(res, 200, updateAlbum, "Update album successfully!");
