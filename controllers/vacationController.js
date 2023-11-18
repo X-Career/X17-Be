@@ -93,7 +93,7 @@ export const getHomeVacations = async (req, res) => {
     const skip = (page - 1) * pageSize;
 
     const vacations = await vacationModel
-      .find()
+      .find({ privacy: { $ne: "private" } })
       .skip(skip)
       .limit(pageSize)
       .sort({ createdAt: -1 })
